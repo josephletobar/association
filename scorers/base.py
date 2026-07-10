@@ -1,9 +1,13 @@
 from abc import ABC, abstractmethod
 
-import numpy as np
-
 
 class AssociationScorer(ABC):
+    """Base class for scorers that compare attributes on candidate objects.
+
+    Each scorer defines which attribute it needs. Objects passed to
+    ``Association.associate`` must provide that attribute.
+    """
+
     name = "association"
 
     def __init__(self, weight=1.0):
@@ -11,10 +15,5 @@ class AssociationScorer(ABC):
 
     @abstractmethod
     def score(self, current, previous) -> float:
+        """Score one current object against one previous object."""
         pass
-
-    def score_many(self, current, previous_objects):
-        return np.array(
-            [self.score(current, previous) for previous in previous_objects],
-            dtype=np.float32,
-        )

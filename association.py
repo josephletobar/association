@@ -1,10 +1,6 @@
 import cv2
 import numpy as np
 from scorers import SemanticSimilarity, SpatialSimilarity
-from utils.create_object import WorldObject
-
-MAX_ASSOCIATION_DISTANCE_M = 10
-EMBEDDING_EMA_ALPHA = 0.8
 
 class Association():
     """Match a current object against previously observed objects.
@@ -60,7 +56,13 @@ class Association():
         details = []
 
         for scorer in self.scorers:
-            scores = scorer.score_many(current_object, previous_objects)
+            scores = np.array(
+                [
+                    scorer.score(current_object, previous_object)
+                    for previous_object in previous_objects
+                ],
+                dtype=np.float32,
+            )
             weight = float(scorer.weight)
             weighted_scores = scores * weight
 
@@ -78,7 +80,6 @@ class Association():
             "scores": final_scores,
             "details": details,
         }
-
 
     def _show_debug_comparison(self, new_object, existing_object, title, score_text):
         new_panel = self._fit_debug_image(new_object.segmented_rgb)
