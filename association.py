@@ -7,8 +7,15 @@ MAX_ASSOCIATION_DISTANCE_M = 10
 EMBEDDING_EMA_ALPHA = 0.8
 
 class Association():
+    """Match a current object against previously observed objects.
 
-    def __init__(self, global_objects, graph_builder, threshold=0.95, scorers=None):
+    Candidate matches are ranked using configurable, independently weighted
+    scorers. The result identifies the best candidate and whether it meets the
+    association threshold, allowing downstream code to decide whether to merge
+    the current object with an existing object.
+    """
+
+    def __init__(self, threshold=0.95, scorers=None):
 
         self.scorers = scorers or [
             SemanticSimilarity(weight=0.8),
@@ -126,4 +133,3 @@ class Association():
             if key == 32:
                 break
         cv2.destroyWindow(title)
-

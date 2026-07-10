@@ -71,7 +71,7 @@ class SemanticSimilarity(AssociationScorer):
         if image is None:
             return None
 
-        from dino import get_dino_embedding
+        from .dino import get_dino_embedding
 
         embedding = get_dino_embedding(image)
         setattr(obj, self.embedding_attr, embedding)
